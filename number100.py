@@ -1,59 +1,81 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout, QGroupBox, QDialog, QVBoxLayout, QGridLayout, QLabel, QTextEdit
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import pyqtSlot
 from random import randint
 
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDialog, QVBoxLayout, \
+    QGridLayout, QLabel, QTextEdit, QMessageBox
 
-class App(QDialog):
+__name__ = '__main__'
+
+
+class Number100Dlg(QDialog):
     def __init__(self):
         super().__init__()
         self.title = 'Number100'
-        self.left = 10
-        self.top = 10
         self.width = 320
         self.height = 100
-        self.initUI()
+        self.init_ui()
 
-    def initUI(self):
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
 
-        self.create100NumberGrid()
+    def init_ui(self):
 
-        windowLayout = QVBoxLayout()
-        windowLayout.addWidget(self.horizontalGroupBox)
+        #QtGui.QApplication.translate
+
         self.okButton = QPushButton('Ok')
-        self.okButton.clicked.connect(self.checkAndRefresh)
+        self.horizontalGroupBox = QWidget()
 
-        windowLayout.addWidget(self.okButton)
+        self.setWindowTitle(self.title)
+        self.setGeometry(0, 0, self.width, self.height)
 
-        self.setLayout(windowLayout)
+        self.numbersGridLayout = QGridLayout()
+        self.fillIn100NumberGrid()
+
+        dialogLayout = QVBoxLayout()
+        dialogLayout.addWidget(self.horizontalGroupBox)
+        self.okButton.clicked.connect(self.checkResult)
+
+        dialogLayout.addWidget(self.okButton)
+
+        self.setLayout(dialogLayout)
 
         self.show()
 
-    def checkAndRefresh(self):
-        self.horizontalGroupBox.re
 
-    def create100NumberGrid(self):
-        self.horizontalGroupBox = QWidget()
-        layout = QGridLayout()
+    def checkResult(self):
+        userInputText = int(self.absentNumberTextField.toPlainText())
+        msg = QMessageBox()
 
-        randomNumber100 = randint(1, 101)
+        if userInputText == self.currentAbsentNumber100:
+            msg.setInformativeText("Correct! Lets play again!")
+        else:
+            msg.setInformativeText("Nice try! Please try again.")
+
+        msg.exec_()
+        self.reload100NumberGrid()
+
+
+    def reload100NumberGrid(self):
+        for i in reversed(range(self.numbersGridLayout.count())):
+            self.numbersGridLayout.itemAt(i).widget().deleteLater()
+        self.fillIn100NumberGrid()
+        self.update()
+
+
+    def fillIn100NumberGrid(self):
+        self.currentAbsentNumber100 = randint(1, 100)
 
         for i in range(0, 10):
             for j in range(1, 11):
-                title = i*10 + j
-                if randomNumber100 == title:
-                    layout.addWidget(QTextEdit(),i,j)
+                title = i * 10 + j
+                if self.currentAbsentNumber100 == title:
+                    self.absentNumberTextField = QTextEdit()
+                    self.numbersGridLayout.addWidget(self.absentNumberTextField, i, j)
                 else:
-                    layout.addWidget(QLabel(str(title)),i,j)
+                    self.numbersGridLayout.addWidget(QLabel(str(title)), i, j)
 
+        self.horizontalGroupBox.setLayout(self.numbersGridLayout)
 
-
-        self.horizontalGroupBox.setLayout(layout)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = App()
+    ex = Number100Dlg()
     sys.exit(app.exec_())
