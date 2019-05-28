@@ -39,7 +39,7 @@ class Number100Dlg(QDialog):
 
 
     def checkResult(self):
-        userInputText = int(self.absentNumberTextField.toPlainText())
+        userInputText = int(self.absentNumberTextField.text())
         msg = QMessageBox()
 
         if userInputText == self.currentAbsentNumber100:
