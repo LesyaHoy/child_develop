@@ -2,7 +2,8 @@ import sys
 from random import randint
 
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDialog, QVBoxLayout, \
-    QGridLayout, QLabel, QTextEdit, QMessageBox
+    QGridLayout, QLabel, QLineEdit, QMessageBox
+from PyQt5.QtGui import QFontMetrics, QIntValidator
 
 __name__ = '__main__'
 
@@ -11,10 +12,8 @@ class Number100Dlg(QDialog):
     def __init__(self):
         super().__init__()
         self.title = 'Number100'
-        self.width = 320
-        self.height = 100
         self.init_ui()
-
+        self.adjustSize()
 
     def init_ui(self):
 
@@ -24,7 +23,6 @@ class Number100Dlg(QDialog):
         self.horizontalGroupBox = QWidget()
 
         self.setWindowTitle(self.title)
-        self.setGeometry(0, 0, self.width, self.height)
 
         self.numbersGridLayout = QGridLayout()
         self.fillIn100NumberGrid()
@@ -63,14 +61,25 @@ class Number100Dlg(QDialog):
     def fillIn100NumberGrid(self):
         self.currentAbsentNumber100 = randint(1, 100)
 
+        self.absentNumberTextField = QLineEdit()
+        self.absentNumberTextField.setValidator(QIntValidator(1, 99));
+        self.absentNumberTextField.setMaxLength(2)
+        fontMetrics = QFontMetrics(self.absentNumberTextField.font());
+        textDimension = 4 * fontMetrics.averageCharWidth();
+
+
+        self.absentNumberTextField
         for i in range(0, 10):
             for j in range(1, 11):
                 title = i * 10 + j
                 if self.currentAbsentNumber100 == title:
-                    self.absentNumberTextField = QTextEdit()
+
+                    self.absentNumberTextField.setFixedSize(textDimension,textDimension)
                     self.numbersGridLayout.addWidget(self.absentNumberTextField, i, j)
                 else:
-                    self.numbersGridLayout.addWidget(QLabel(str(title)), i, j)
+                    numberLabel = QLabel(str(title))
+                    numberLabel.setFixedSize(textDimension,textDimension)
+                    self.numbersGridLayout.addWidget(numberLabel, i, j)
 
         self.horizontalGroupBox.setLayout(self.numbersGridLayout)
 
