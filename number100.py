@@ -4,6 +4,7 @@ from random import randint
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QDialog, QVBoxLayout, \
     QGridLayout, QLabel, QLineEdit, QMessageBox
 from PyQt5.QtGui import QFontMetrics, QIntValidator
+from PyQt5.QtCore import Qt
 
 __name__ = '__main__'
 
@@ -44,12 +45,11 @@ class Number100Dlg(QDialog):
 
         if userInputText == self.currentAbsentNumber100:
             msg.setInformativeText("Correct! Lets play again!")
+            msg.exec_()
+            self.reload100NumberGrid()
         else:
             msg.setInformativeText("Nice try! Please try again.")
-
-        msg.exec_()
-        self.reload100NumberGrid()
-
+            msg.exec_()
 
     def reload100NumberGrid(self):
         for i in reversed(range(self.numbersGridLayout.count())):
@@ -65,7 +65,7 @@ class Number100Dlg(QDialog):
         self.absentNumberTextField.setValidator(QIntValidator(1, 99));
         self.absentNumberTextField.setMaxLength(2)
         fontMetrics = QFontMetrics(self.absentNumberTextField.font());
-        textDimension = 4 * fontMetrics.averageCharWidth();
+        textDimension = 7 * fontMetrics.averageCharWidth();
 
 
         self.absentNumberTextField
@@ -76,9 +76,12 @@ class Number100Dlg(QDialog):
 
                     self.absentNumberTextField.setFixedSize(textDimension,textDimension)
                     self.numbersGridLayout.addWidget(self.absentNumberTextField, i, j)
+                    self.absentNumberTextField.setAlignment(Qt.AlignCenter)
                 else:
                     numberLabel = QLabel(str(title))
+                    numberLabel.setStyleSheet("background-color: white; border: 1px inset grey;")
                     numberLabel.setFixedSize(textDimension,textDimension)
+                    numberLabel.setAlignment(Qt.AlignCenter)
                     self.numbersGridLayout.addWidget(numberLabel, i, j)
 
         self.horizontalGroupBox.setLayout(self.numbersGridLayout)
