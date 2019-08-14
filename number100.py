@@ -25,12 +25,6 @@ class Number100Dlg(QDialog):
         font_path = os.path.realpath("fonts/KBREINDEERGAMES.ttf")
         font_id = font_db.addApplicationFont(font_path)
 
-        #families = font_db.applicationFontFamilies(font_id)
-
-        #for font_family in families:
-        #    print(font_family)
-
-
         self.nice_font = QFont("KBREINDEERGAMES", 38)
 
         self.okButton = QPushButton('Ok')
@@ -57,7 +51,7 @@ class Number100Dlg(QDialog):
         msg = QMessageBox()
 
         if userInputText == self.currentAbsentNumber100:
-            msg.setInformativeText("Correct! Lets play again!")
+            msg.setInformativeText(tr("Correct! Lets play again!"))
             msg.exec_()
             self.reload100NumberGrid()
         else:
